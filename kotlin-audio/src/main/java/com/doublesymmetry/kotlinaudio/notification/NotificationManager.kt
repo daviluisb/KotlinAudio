@@ -30,6 +30,7 @@ import com.doublesymmetry.kotlinaudio.models.NotificationButton
 import com.doublesymmetry.kotlinaudio.models.NotificationConfig
 import com.doublesymmetry.kotlinaudio.models.NotificationState
 import com.doublesymmetry.kotlinaudio.players.components.getAudioItemHolder
+import com.doublesymmetry.kotlinaudio.utils.saveMediaCoverToPng
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
@@ -396,11 +397,27 @@ class NotificationManager internal constructor(
                 putLong(MediaMetadataCompat.METADATA_KEY_DURATION, it)
             }
             getArtworkUrl()?.let {
-                putString(MediaMetadataCompat.METADATA_KEY_ART_URI, it)
-            }
-            getCachedArtworkBitmap()?.let {
-                putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, it);
-                putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, it);
+              val cachedArtworkBitmap = getCachedArtworkBitmap()Add commentMore actions
+                if (it != "null") {
+                    putString(MediaMetadataCompat.METADATA_KEY_ART_URI, it)
+                    // HACK: fix blurry thumbnail (why?)
+                    putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cachedArtworkBitmap)
+                    putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, cachedArtworkBitmap)
+                } else {
+                        val cachedBitmapURI = saveMediaCoverToPng(
+                            player.currentMediaItem?.getAudioItemHolder()?.audioItem?.audioUrl,
+                            contentResolver = context.contentResolver,
+                            // HACK: this method is called 2/4 times
+                            // HACK: mediaId is null; currentMetadata doesnt change; what to use?
+                            cacheKey = "${player.currentMediaItemIndex}-${getTitle()}"
+                        )
+                        if (cachedBitmapURI != null) {
+                            putString(MediaMetadataCompat.METADATA_KEY_ART_URI, cachedBitmapURI)
+                        } else {
+                            putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cachedArtworkBitmap)
+                            putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, cachedArtworkBitmap)
+                        }
+                }
             }
             getUserRating()?.let {
                 putRating(MediaMetadataCompat.METADATA_KEY_RATING, it)
