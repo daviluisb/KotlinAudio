@@ -38,7 +38,7 @@ import com.doublesymmetry.kotlinaudio.models.PositionChangedReason
 import com.doublesymmetry.kotlinaudio.notification.NotificationManager
 import com.doublesymmetry.kotlinaudio.players.components.PlayerCache
 import com.doublesymmetry.kotlinaudio.players.components.getAudioItemHolder
-import com.doublesymmetry.kotlinaudio.utils.isUriLocal
+import com.doublesymmetry.kotlinaudio.utils.isUriLocalFile
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.DefaultLoadControl.Builder
@@ -544,7 +544,7 @@ abstract class BaseAudioPlayer internal constructor(
                 raw.open(DataSpec(uri))
                 DataSource.Factory { raw }
             }
-            isUriLocal(uri) -> {
+            isUriLocalFile(uri) -> {
                 DefaultDataSourceFactory(context, userAgent)
             }
             else -> {
