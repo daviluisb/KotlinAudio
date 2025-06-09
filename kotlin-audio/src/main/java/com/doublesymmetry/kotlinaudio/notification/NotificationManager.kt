@@ -397,26 +397,26 @@ class NotificationManager internal constructor(
                 putLong(MediaMetadataCompat.METADATA_KEY_DURATION, it)
             }
             getArtworkUrl()?.let {
-              val cachedArtworkBitmap = getCachedArtworkBitmap()Add commentMore actions
+                val cachedArtworkBitmap = getCachedArtworkBitmap()
                 if (it != "null") {
                     putString(MediaMetadataCompat.METADATA_KEY_ART_URI, it)
                     // HACK: fix blurry thumbnail (why?)
                     putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cachedArtworkBitmap)
                     putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, cachedArtworkBitmap)
                 } else {
-                        val cachedBitmapURI = saveMediaCoverToPng(
-                            player.currentMediaItem?.getAudioItemHolder()?.audioItem?.audioUrl,
-                            contentResolver = context.contentResolver,
-                            // HACK: this method is called 2/4 times
-                            // HACK: mediaId is null; currentMetadata doesnt change; what to use?
-                            cacheKey = "${player.currentMediaItemIndex}-${getTitle()}"
-                        )
-                        if (cachedBitmapURI != null) {
-                            putString(MediaMetadataCompat.METADATA_KEY_ART_URI, cachedBitmapURI)
-                        } else {
-                            putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cachedArtworkBitmap)
-                            putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, cachedArtworkBitmap)
-                        }
+                    val cachedBitmapURI = saveMediaCoverToPng(
+                        player.currentMediaItem?.getAudioItemHolder()?.audioItem?.audioUrl,
+                        contentResolver = context.contentResolver,
+                        // HACK: this method is called 2/4 times
+                        // HACK: mediaId is null; currentMetadata doesnt change; what to use?
+                        cacheKey = "${player.currentMediaItemIndex}-${getTitle()}"
+                    )
+                    if (cachedBitmapURI != null) {
+                        putString(MediaMetadataCompat.METADATA_KEY_ART_URI, cachedBitmapURI)
+                    } else {
+                        putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cachedArtworkBitmap)
+                        putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, cachedArtworkBitmap)
+                    }
                 }
             }
             getUserRating()?.let {

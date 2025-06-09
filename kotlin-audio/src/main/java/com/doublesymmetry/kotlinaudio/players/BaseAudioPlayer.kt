@@ -766,7 +766,7 @@ abstract class BaseAudioPlayer internal constructor(
 
         /**
          * The generic onEvents callback provides access to the Player object and specifies the set
-         * of events that occurred together. It’s always called after the callbacks that correspond
+         * of events that occurred together. It's always called after the callbacks that correspond
          * to the individual events.
          */
         override fun onEvents(player: Player, events: Player.Events) {
